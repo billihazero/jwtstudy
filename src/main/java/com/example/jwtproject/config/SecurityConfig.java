@@ -1,5 +1,6 @@
 package com.example.jwtproject.config;
 
+import com.example.jwtproject.jwt.JWTFilter;
 import com.example.jwtproject.jwt.JWTUtil;
 import com.example.jwtproject.jwt.LoginFilter;
 import org.springframework.context.annotation.Bean;
@@ -70,6 +71,10 @@ public class SecurityConfig {
                         //나머지는 로그인한 사용자만 허용
                         .anyRequest().authenticated());
 
+        //LoginFilter 앞에 JWTFilter를 등록
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        
         //기존 filter가 있던 자리에 custom한 LoginFilter 등록
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);

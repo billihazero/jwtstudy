@@ -1,5 +1,6 @@
 package com.example.jwtproject.config;
 
+import com.example.jwtproject.jwt.CustomLogoutFilter;
 import com.example.jwtproject.jwt.JWTFilter;
 import com.example.jwtproject.jwt.JWTUtil;
 import com.example.jwtproject.jwt.LoginFilter;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -112,6 +114,9 @@ public class SecurityConfig {
         //기존 filter가 있던 자리에 custom한 LoginFilter 등록
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         //세션 설정
         //jwt의 session은 stateless 상태로 관리한다.

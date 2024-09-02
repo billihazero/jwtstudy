@@ -94,6 +94,9 @@ public class SecurityConfig {
                         //admin 경로는 "ADMIN" 권한 가진자만 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
 
+                        //reissue 경로 모든 권한 허용
+                        .requestMatchers("/reissue").permitAll()
+
                         //나머지는 로그인한 사용자만 허용
                         .anyRequest().authenticated());
 

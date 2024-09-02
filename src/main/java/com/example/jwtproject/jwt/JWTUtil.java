@@ -33,6 +33,12 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
 
+    //category 검증
+    public String getCategory(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+    }
+
     //token 만료 확인
     public Boolean isExpired(String token) {
 
@@ -40,8 +46,10 @@ public class JWTUtil {
     }
 
     //issuedAt : 토큰이 언제 발행됐는지
-    public String createJwt(String username, String role, Long expiredMs){
+    //category : Access / Refresh
+    public String createJwt(String category, String username, String role, Long expiredMs){
         return Jwts.builder()
+                .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
